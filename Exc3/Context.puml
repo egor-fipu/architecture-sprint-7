@@ -1,0 +1,32 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+title Диаграмма контекста — Модель C4 для новых бизнес-функций PropDevelopment
+
+actor "Собственник" as Owner
+actor "Партнёрская платформа" as PartnerPlatform
+
+package "Система PropDevelopment" {
+    entity "Мобильное приложение" as MobileApp
+    entity "API Gateway" as APIGateway
+    entity "Интеграционный модуль" as IntegrationModule
+    database "База данных собственников" as OwnersDB
+}
+
+package "Платформа партнёра" {
+    entity "Домофон" as Intercom
+    entity "Шлагбаум" as Barrier
+    database "База данных партнёра" as PartnerDB
+}
+
+Owner -> MobileApp : Управление функциями "Умный дом"
+MobileApp -> APIGateway : Запрос прав доступа
+APIGateway -> IntegrationModule : Проверка прав доступа
+IntegrationModule -> OwnersDB : Получение данных о доступе
+IntegrationModule -> Intercom : Вызов API для управления домофоном
+IntegrationModule -> Barrier : Вызов API для управления шлагбаумом
+Intercom -> PartnerDB : Сохранение биометрических данных
+Barrier -> PartnerDB : Сохранение данных автомобилей
+PartnerPlatform -> IntegrationModule : Ответы на запросы API
+
+@enduml
